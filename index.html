@@ -1,0 +1,62 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Emoji Meals</title>
+  <meta name="description" content="<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="author" content="Emoji Meals">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html {
+      background-color: black;
+    }
+    marquee {
+      background-color: white;
+    }
+    h1 {
+      margin: 0;
+    }
+
+    .outside {
+      height: 98vh; width: 98vw; margin: auto auto; display:block;
+    }
+  </style>
+  <script>
+    var emojiStringToArray = function (str) {
+      split = str.split(/([\uD800-\uDBFF][\uDC00-\uDFFF])/);
+      arr = [];
+      for (var i=0; i<split.length; i++) {
+        char = split[i]
+        if (char !== "") {
+          arr.push(char);
+        }
+      }
+      return arr;
+    };
+
+    var recipes = [];
+    var index = 0;
+    fetch('https://raw.githubusercontent.com/EmojiMeals/recipes/master/recipes.json')
+      .then(response => response.json())
+      .then(data => {
+        recipes = Object.entries(data);
+        setInterval(function() {
+          document.getElementById("stuff").innerHTML = `${emojiStringToArray(recipes[index][0]).join(' + ')} = ${recipes[index][1]}`;
+          index = (index + 1) % recipes.length;
+        },1000);
+      })
+  </script>
+</head>
+
+<body>
+  <div>
+    <marquee direction="down" width="100%" behavior="alternate" class="outside" scrollamount="15">
+      <marquee behavior="alternate" scrollamount="15">
+        <h1 id="stuff">🐟 + 🍰 = 🍥</h1>
+      </marquee>
+    </marquee>
+  </div>
+</body>
+</html>
